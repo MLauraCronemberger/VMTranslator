@@ -1,0 +1,19 @@
+# Maven
+target/
+*.class
+ 
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+ 
+# Sistema operacional
+.DS_Store
+Thumbs.db
+ 
+# Arquivos gerados pelo tradutor (não versionar saídas)
+*.asm
+*.out

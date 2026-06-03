@@ -68,64 +68,80 @@ public class CodeWriter {
 
     public void writePush(String segment, int index) throws IOException {
 
-        if ("constant".equals(segment)) {
+        switch (segment) {
 
-            writeLine("@" + index);
-            writeLine("D=A");
+            case "constant" -> {
 
-            writeLine("@SP");
-            writeLine("A=M");
-            writeLine("M=D");
+                writeLine("@" + index);
+                writeLine("D=A");
 
-            writeLine("@SP");
-            writeLine("M=M+1");
-        }
+                writeLine("@SP");
+                writeLine("A=M");
+                writeLine("M=D");
 
-        else if ("local".equals(segment)) {
+                writeLine("@SP");
+                writeLine("M=M+1");
+            }
 
-            writeLine("@LCL");
-            writeLine("D=M");
+            case "local", "argument", "this", "that" -> {
 
-            writeLine("@" + index);
-            writeLine("D=D+A");
+                writeLine("@" + getBaseAddress(segment));
+                writeLine("D=M");
 
-            writeLine("@R13");
-            writeLine("M=D");
+                writeLine("@" + index);
+                writeLine("D=D+A");
 
-            writeLine("@R13");
-            writeLine("A=M");
-            writeLine("D=M");
+                writeLine("@R13");
+                writeLine("M=D");
 
-            writeLine("@SP");
-            writeLine("A=M");
-            writeLine("M=D");
+                writeLine("@R13");
+                writeLine("A=M");
+                writeLine("D=M");
 
-            writeLine("@SP");
-            writeLine("M=M+1");
-        }
+                writeLine("@SP");
+                writeLine("A=M");
+                writeLine("M=D");
+
+                writeLine("@SP");
+                writeLine("M=M+1");
+            }
+
+            default ->
+                throw new IllegalArgumentException(
+                    "Segmento não suportado: " + segment
+                );
+    }
 }
 
     public void writePop(String segment, int index) throws IOException {
 
-    if ("local".equals(segment)) {
+        switch (segment) {
 
-        writeLine("@LCL");
-        writeLine("D=M");
+            case "local", "argument", "this", "that" -> {
 
-        writeLine("@" + index);
-        writeLine("D=D+A");
+                writeLine("@" + getBaseAddress(segment));
+                writeLine("D=M");
 
-        writeLine("@R13");
-        writeLine("M=D");
+                writeLine("@" + index);
+                writeLine("D=D+A");
 
-        writeLine("@SP");
-        writeLine("AM=M-1");
-        writeLine("D=M");
+                writeLine("@R13");
+                writeLine("M=D");
 
-        writeLine("@R13");
-        writeLine("A=M");
-        writeLine("M=D");
-    }
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("@R13");
+                writeLine("A=M");
+                writeLine("M=D");
+            }
+
+            default ->
+                throw new IllegalArgumentException(
+                    "Segmento não suportado: " + segment
+                );
+        }
 }
 
     public void close() throws IOException {

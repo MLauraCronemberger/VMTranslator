@@ -20,6 +20,18 @@ public class CodeWriter {
         writer.newLine();
     }
 
+    private String getBaseAddress(String segment) {
+    return switch (segment) {
+        case "local" -> "LCL";
+        case "argument" -> "ARG";
+        case "this" -> "THIS";
+        case "that" -> "THAT";
+        default -> throw new IllegalArgumentException(
+            "Segmento inválido: " + segment
+        );
+    };
+}
+
     public void writeArithmetic(String command) throws IOException {
 
         switch (command){
@@ -56,22 +68,65 @@ public class CodeWriter {
 
     public void writePush(String segment, int index) throws IOException {
 
-    if ("constant".equals(segment)) {
+        if ("constant".equals(segment)) {
 
-        writeLine("@" + index);
-        writeLine("D=A");
+            writeLine("@" + index);
+            writeLine("D=A");
 
-        writeLine("@SP");
-        writeLine("A=M");
-        writeLine("M=D");
+            writeLine("@SP");
+            writeLine("A=M");
+            writeLine("M=D");
 
-        writeLine("@SP");
-        writeLine("M=M+1");
-    }
+            writeLine("@SP");
+            writeLine("M=M+1");
+        }
+
+        else if ("local".equals(segment)) {
+
+            writeLine("@LCL");
+            writeLine("D=M");
+
+            writeLine("@" + index);
+            writeLine("D=D+A");
+
+            writeLine("@R13");
+            writeLine("M=D");
+
+            writeLine("@R13");
+            writeLine("A=M");
+            writeLine("D=M");
+
+            writeLine("@SP");
+            writeLine("A=M");
+            writeLine("M=D");
+
+            writeLine("@SP");
+            writeLine("M=M+1");
+        }
 }
 
     public void writePop(String segment, int index) throws IOException {
+
+    if ("local".equals(segment)) {
+
+        writeLine("@LCL");
+        writeLine("D=M");
+
+        writeLine("@" + index);
+        writeLine("D=D+A");
+
+        writeLine("@R13");
+        writeLine("M=D");
+
+        writeLine("@SP");
+        writeLine("AM=M-1");
+        writeLine("D=M");
+
+        writeLine("@R13");
+        writeLine("A=M");
+        writeLine("M=D");
     }
+}
 
     public void close() throws IOException {
         writer.close();

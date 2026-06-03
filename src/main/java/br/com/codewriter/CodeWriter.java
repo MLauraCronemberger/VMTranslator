@@ -1,3 +1,10 @@
+package br.com.codewriter;
+
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class CodeWriter {
 
     private final BufferedWriter writer;
@@ -15,36 +22,36 @@ public class CodeWriter {
 
     public void writeArithmetic(String command) throws IOException {
 
-    if ("add".equals(command)) {
+        switch (command){
+            case "add" -> {
+                writeLine("@SP");
+                writeLine("AM=M-1");
 
-        writeLine("@SP");
-        writeLine("AM=M-1");
+                writeLine("D=M");
 
-        writeLine("D=M");
+                writeLine("A=A-1");
 
-        writeLine("A=A-1");
+                writeLine("M=M+D");
+            }
 
-        writeLine("M=M+D");
-    }
+            case "sub" -> {
+                writeLine("@SP");
+                writeLine("AM=M-1");
 
-        if ("sub".equals(command)) {
+                writeLine("D=M");
 
-        writeLine("@SP");
-        writeLine("AM=M-1");
+                writeLine("A=A-1");
 
-        writeLine("D=M");
+                writeLine("M=M-D");
+            }
 
-        writeLine("A=A-1");
+            case "neg" -> {
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=-M");
+            }
+        }
 
-        writeLine("M=M-D");
-    }
-
-        if ("neg".equals(command)) {
-
-        writeLine("@SP");
-        writeLine("A=M-1");
-        writeLine("M=-M");
-    }
 }
 
     public void writePush(String segment, int index) throws IOException {

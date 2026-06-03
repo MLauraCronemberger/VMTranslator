@@ -3,5 +3,5 @@ push constant 7
 push constant 8
 add
 push constant 10
-pop local 0
-pop local 1
+//pop local 0
+//pop local 1

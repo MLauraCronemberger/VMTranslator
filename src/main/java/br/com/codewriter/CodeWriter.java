@@ -9,6 +9,7 @@ public class CodeWriter {
 
     private final BufferedWriter writer;
     private int labelCounter;
+    private String fileName;
 
     public CodeWriter(Path outputFile) throws IOException {
         this.writer = Files.newBufferedWriter(outputFile);
@@ -30,7 +31,11 @@ public class CodeWriter {
             "Segmento inválido: " + segment
         );
     };
-}
+    }
+
+    public void setFileName(String fileName) {
+         this.fileName = fileName;
+    }
 
     public void writeArithmetic(String command) throws IOException {
 
@@ -137,6 +142,47 @@ public class CodeWriter {
                 writeLine("M=M+1");
             }
 
+            case "temp" -> {
+
+                writeLine("@" + (5 + index));
+                writeLine("D=M");
+
+                writeLine("@SP");
+                writeLine("A=M");
+                writeLine("M=D");
+
+                writeLine("@SP");
+                writeLine("M=M+1");
+            }            
+
+            case "pointer" -> {
+
+                String pointer = (index == 0) ? "THIS" : "THAT";
+
+                writeLine("@" + pointer);
+                writeLine("D=M");
+
+                writeLine("@SP");
+                writeLine("A=M");
+                writeLine("M=D");
+
+                writeLine("@SP");
+                writeLine("M=M+1");
+            }
+
+            case "static" -> {
+
+                writeLine("@" + fileName + "." + index);
+                writeLine("D=M");
+
+                writeLine("@SP");
+                writeLine("A=M");
+                writeLine("M=D");
+
+                writeLine("@SP");
+                writeLine("M=M+1");
+            }
+
             default ->
                 throw new IllegalArgumentException(
                     "Segmento não suportado: " + segment
@@ -165,6 +211,38 @@ public class CodeWriter {
 
                 writeLine("@R13");
                 writeLine("A=M");
+                writeLine("M=D");
+            }
+
+            case "temp" -> {
+
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("@" + (5 + index));
+                writeLine("M=D");
+            }
+
+            case "pointer" -> {
+
+                String pointer = (index == 0) ? "THIS" : "THAT";
+
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("@" + pointer);
+                writeLine("M=D");
+            }
+
+            case "static" -> {
+
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("@" + fileName + "." + index);
                 writeLine("M=D");
             }
 

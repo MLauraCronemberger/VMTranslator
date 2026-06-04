@@ -62,6 +62,37 @@ public class CodeWriter {
                 writeLine("A=M-1");
                 writeLine("M=-M");
             }
+
+            case "and" -> {
+                writeLine("@SP");
+                writeLine("AM=M-1");
+
+                writeLine("D=M");
+
+                writeLine("A=A-1");
+
+                writeLine("M=M&D");
+            }            
+
+        
+            case "or" -> {
+                writeLine("@SP");
+                writeLine("AM=M-1");
+
+                writeLine("D=M");
+
+                writeLine("A=A-1");
+
+                writeLine("M=M|D");
+            }
+
+
+            case "not" -> {
+                writeLine("@SP");
+                writeLine("A=M-1");
+
+                writeLine("M=!M");
+            }            
         }
 
 }

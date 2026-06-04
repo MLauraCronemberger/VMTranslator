@@ -16,6 +16,10 @@ public class VMTranslator {
         Parser parser = new Parser(input);
         CodeWriter codeWriter = new CodeWriter(Path.of(outputName));
 
+        String fileName = input.getFileName().toString().replace(".vm", "");
+
+        codeWriter.setFileName(fileName);
+
         while (parser.hasMoreCommands()) {
 
             parser.advance();

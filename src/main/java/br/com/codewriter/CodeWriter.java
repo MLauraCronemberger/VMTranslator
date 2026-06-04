@@ -97,9 +97,102 @@ public class CodeWriter {
                 writeLine("A=M-1");
 
                 writeLine("M=!M");
-            }            
-        }
+            }        
+            
+            case "eq" -> {
 
+                String trueLabel = "EQ_TRUE" + labelCounter;
+                String endLabel = "EQ_END" + labelCounter;
+                labelCounter++;
+
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("A=A-1");
+                writeLine("D=M-D");
+
+                writeLine("@" + trueLabel);
+                writeLine("D;JEQ");
+
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=0");
+
+                writeLine("@" + endLabel);
+                writeLine("0;JMP");
+
+                writeLine("(" + trueLabel + ")");
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=-1");
+
+                writeLine("(" + endLabel + ")");
+            }            
+
+            case "gt" -> {
+
+                String trueLabel = "GT_TRUE" + labelCounter;
+                String endLabel = "GT_END" + labelCounter;
+                labelCounter++;
+
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("A=A-1");
+                writeLine("D=M-D");
+
+                writeLine("@" + trueLabel);
+                writeLine("D;JGT");
+
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=0");
+
+                writeLine("@" + endLabel);
+                writeLine("0;JMP");
+
+                writeLine("(" + trueLabel + ")");
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=-1");
+
+                writeLine("(" + endLabel + ")");
+            }
+
+            case "lt" -> {
+
+                String trueLabel = "LT_TRUE" + labelCounter;
+                String endLabel = "LT_END" + labelCounter;
+                labelCounter++;
+
+                writeLine("@SP");
+                writeLine("AM=M-1");
+                writeLine("D=M");
+
+                writeLine("A=A-1");
+                writeLine("D=M-D");
+
+                writeLine("@" + trueLabel);
+                writeLine("D;JLT");
+
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=0");
+
+                writeLine("@" + endLabel);
+                writeLine("0;JMP");
+
+                writeLine("(" + trueLabel + ")");
+                writeLine("@SP");
+                writeLine("A=M-1");
+                writeLine("M=-1");
+
+                writeLine("(" + endLabel + ")");
+            }
+
+        }
 }
 
     public void writePush(String segment, int index) throws IOException {

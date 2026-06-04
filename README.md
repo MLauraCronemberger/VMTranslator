@@ -1,4 +1,4 @@
-# 🔧 VM Translator — Tradutor VM → Assembly Hack (Nand2Tetris)
+# 🔧 VM Translator → Assembly Hack (Nand2Tetris)
 
 Este projeto implementa a **primeira parte do VM Translator** para o projeto **Nand2Tetris**.
 

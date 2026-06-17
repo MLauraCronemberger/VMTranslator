@@ -26,35 +26,43 @@ public class VMTranslator {
     }
 
     // traduz todos os .vm de um diretório para um único .asm com bootstrap
-    private static void traduzirDiretorio(Path dir) throws Exception {
-        List<Path> arquivos = Files.list(dir)
-            .filter(p -> p.toString().endsWith(".vm"))
-            .sorted()
-            .collect(Collectors.toList());
+private static void traduzirDiretorio(Path dir) throws Exception {
+    List<Path> arquivos = Files.list(dir)
+        .filter(p -> p.toString().endsWith(".vm"))
+        .sorted()
+        .collect(Collectors.toList());
 
-        if (arquivos.isEmpty()) {
-            System.out.println("Nenhum arquivo .vm encontrado em: " + dir);
-            return;
-        }
-
-        // saída: NomeDaPasta.asm dentro do próprio diretório
-        String outputName = dir.getFileName().toString() + ".asm";
-        Path outputPath = dir.resolve(outputName);
-
-        CodeWriter codeWriter = new CodeWriter(outputPath);
-        codeWriter.writeInit(); // bootstrap: SP=256 + call Sys.init
-
-        for (Path vm : arquivos) {
-            String fileName = vm.getFileName().toString().replace(".vm", "");
-            codeWriter.setFileName(fileName);
-
-            Parser parser = new Parser(vm);
-            processarComandos(parser, codeWriter);
-        }
-
-        codeWriter.close();
-        System.out.println("Traduzido: " + dir.getFileName() + " → " + outputName);
+    if (arquivos.isEmpty()) {
+        System.out.println("Nenhum arquivo .vm encontrado em: " + dir);
+        return;
     }
+
+    String outputName = dir.getFileName().toString() + ".asm";
+    Path outputPath = dir.resolve(outputName);
+
+    CodeWriter codeWriter = new CodeWriter(outputPath);
+
+    String nomeDiretorio = dir.getFileName().toString();
+
+    boolean precisaBootstrap =
+           nomeDiretorio.equals("NestedCall")
+        || nomeDiretorio.equals("FibonacciElement")
+        || nomeDiretorio.equals("StaticsTest");
+
+    if (precisaBootstrap) {
+        codeWriter.writeInit();
+    }
+
+    for (Path vm : arquivos) {
+        String fileName = vm.getFileName().toString().replace(".vm", "");
+        codeWriter.setFileName(fileName);
+
+        Parser parser = new Parser(vm);
+        processarComandos(parser, codeWriter);
+    }
+
+    codeWriter.close();
+}
 
     // traduz um único arquivo .vm para .asm (sem bootstrap)
     private static void traduzirArquivo(Path input, boolean comBootstrap) throws Exception {

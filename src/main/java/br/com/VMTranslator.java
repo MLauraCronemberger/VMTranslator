@@ -17,29 +17,21 @@ public class VMTranslator {
         CodeWriter codeWriter = new CodeWriter(Path.of(outputName));
 
         String fileName = input.getFileName().toString().replace(".vm", "");
-
         codeWriter.setFileName(fileName);
 
         while (parser.hasMoreCommands()) {
-
             parser.advance();
 
             switch (parser.commandType()) {
-
-                case C_ARITHMETIC ->
-                    codeWriter.writeArithmetic(parser.arg1());
-
-                case C_PUSH ->
-                    codeWriter.writePush(
-                        parser.arg1(),
-                        parser.arg2()
-                    );
-
-                case C_POP ->
-                    codeWriter.writePop(
-                        parser.arg1(),
-                        parser.arg2()
-                    );
+                case C_ARITHMETIC -> codeWriter.writeArithmetic(parser.arg1());
+                case C_PUSH       -> codeWriter.writePush(parser.arg1(), parser.arg2());
+                case C_POP        -> codeWriter.writePop(parser.arg1(), parser.arg2());
+                case C_LABEL      -> codeWriter.writeLabel(parser.arg1());
+                case C_GOTO       -> codeWriter.writeGoto(parser.arg1());
+                case C_IF         -> codeWriter.writeIf(parser.arg1());
+                case C_FUNCTION   -> codeWriter.writeFunction(parser.arg1(), parser.arg2());
+                case C_CALL       -> codeWriter.writeCall(parser.arg1(), parser.arg2());
+                case C_RETURN     -> codeWriter.writeReturn();
             }
         }
 

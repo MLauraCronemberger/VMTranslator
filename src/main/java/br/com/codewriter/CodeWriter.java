@@ -36,6 +36,7 @@ public class CodeWriter {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+        this.currentFunction = fileName; // fallback para labels fora de funções
     }
 
     // ─── Bootstrap ────────────────────────────────────────────────────────────

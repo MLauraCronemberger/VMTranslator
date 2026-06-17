@@ -310,12 +310,12 @@ Todos os programas foram traduzidos e validados no CPU Emulator oficial do Nand2
 
 ## 👥 Créditos
 
-**Aluna:** Maria Laura Rangel Urbano Cronemberger
-**Matrícula:** 20250071287
-**Disciplina:** EECP0026 — Compiladores
-**Professor:** Prof. Dr. Sergio Souza Costa
-**Instituição:** UFMA — Universidade Federal do Maranhão
-**Semestre:** 2026.1
+**Aluna:** Maria Laura Rangel Urbano Cronemberger  
+**Matrícula:** 20250071287  
+**Disciplina:** EECP0026 — Compiladores  
+**Professor:** Prof. Dr. Sergio Souza Costa  
+**Instituição:** UFMA — Universidade Federal do Maranhão  
+**Semestre:** 2026.1  
 
 ---
 

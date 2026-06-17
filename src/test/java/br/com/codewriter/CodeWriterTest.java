@@ -260,4 +260,143 @@ public class CodeWriterTest {
         assertTrue(out.contains("EQ_TRUE0"));
         assertTrue(out.contains("EQ_TRUE1"));
     }
+
+    // ─── Controle de fluxo (Parte 2) ───────────────────────────────────────────
+
+@Test
+void testWriteLabel() throws IOException {
+    codeWriter.writeLabel("LOOP");
+    String out = output();
+
+    assertTrue(out.contains("(Test$LOOP)"));
+}
+
+@Test
+void testWriteGoto() throws IOException {
+    codeWriter.writeGoto("END");
+    String out = output();
+
+    assertContainsInOrder(
+            out,
+            "@Test$END",
+            "0;JMP"
+    );
+}
+
+@Test
+void testWriteIf() throws IOException {
+    codeWriter.writeIf("LOOP");
+    String out = output();
+
+    assertContainsInOrder(
+            out,
+            "@SP",
+            "AM=M-1",
+            "D=M",
+            "@Test$LOOP",
+            "D;JNE"
+    );
+}
+
+// ─── Funções (Parte 2) ─────────────────────────────────────────────────────
+
+@Test
+void testWriteFunctionSemLocais() throws IOException {
+    codeWriter.writeFunction("Main.main", 0);
+    String out = output();
+
+    assertTrue(out.contains("(Main.main)"));
+}
+
+@Test
+void testWriteFunctionComLocais() throws IOException {
+    codeWriter.writeFunction("Main.main", 3);
+    String out = output();
+
+    assertTrue(out.contains("(Main.main)"));
+
+    // cada variável local gera M=0
+    int ocorrencias = out.split("M=0", -1).length - 1;
+    assertEquals(3, ocorrencias);
+
+    // cada variável local incrementa o SP
+    int incrementos = out.split("M=M\\+1", -1).length - 1;
+    assertEquals(3, incrementos);
+}
+
+@Test
+void testWriteCall() throws IOException {
+    codeWriter.writeCall("Main.fibonacci", 2);
+    String out = output();
+
+    assertTrue(out.contains("@Main.fibonacci$ret.0"));
+    assertTrue(out.contains("(Main.fibonacci$ret.0)"));
+
+    assertTrue(out.contains("@LCL"));
+    assertTrue(out.contains("@ARG"));
+    assertTrue(out.contains("@THIS"));
+    assertTrue(out.contains("@THAT"));
+
+    assertContainsInOrder(
+            out,
+            "@Main.fibonacci",
+            "0;JMP"
+    );
+}
+
+@Test
+void testWriteCallGeraLabelsDeRetornoUnicos() throws IOException {
+    codeWriter.writeCall("Main.main", 0);
+    codeWriter.writeCall("Main.main", 0);
+
+    String out = output();
+
+    assertTrue(out.contains("Main.main$ret.0"));
+    assertTrue(out.contains("Main.main$ret.1"));
+}
+
+@Test
+void testWriteReturn() throws IOException {
+    codeWriter.writeReturn();
+    String out = output();
+
+    // endFrame em R14
+    assertTrue(out.contains("@R14"));
+
+    // retAddr em R15
+    assertTrue(out.contains("@R15"));
+
+    // restauração dos segmentos
+    assertTrue(out.contains("@THAT"));
+    assertTrue(out.contains("@THIS"));
+    assertTrue(out.contains("@ARG"));
+    assertTrue(out.contains("@LCL"));
+
+    // retorno
+    assertContainsInOrder(
+            out,
+            "@R15",
+            "A=M",
+            "0;JMP"
+    );
+}
+
+@Test
+void testWriteInit() throws IOException {
+    codeWriter.writeInit();
+    String out = output();
+
+    assertContainsInOrder(
+            out,
+            "@256",
+            "D=A",
+            "@SP",
+            "M=D"
+    );
+
+    // writeInit chama Sys.init através de writeCall
+    assertTrue(out.contains("@Sys.init$ret.0"));
+    assertTrue(out.contains("@Sys.init"));
+    assertTrue(out.contains("0;JMP"));
+}
 }

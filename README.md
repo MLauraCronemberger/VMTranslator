@@ -212,13 +212,13 @@ java -jar target/vmtranslator.jar src/test/resources/7/MemoryAccess/StaticTest/S
 **ProgramFlow — BasicLoop**
 
 ```bash
-java -jar target/vmtranslator.jar src/test/resources/8/ProgramFlow/BasicLoop/
+java -jar target/vmtranslator.jar src/test/resources/8/ProgramFlow/BasicLoop/BasicLoop.vm
 ```
 
 **ProgramFlow — FibonacciSeries**
 
 ```bash
-java -jar target/vmtranslator.jar src/test/resources/8/ProgramFlow/FibonacciSeries/
+java -jar target/vmtranslator.jar src/test/resources/8/ProgramFlow/FibonacciSeries/FibonacciSeries.vm
 ```
 
 **FunctionCalls — SimpleFunction**
